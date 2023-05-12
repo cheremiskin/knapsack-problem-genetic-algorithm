@@ -1,7 +1,7 @@
 from typing import List
 
 from base.item import Item
-from base.solver import Solver
+from solvers.genetic_solver import Solver
 
 
 class Optimizer:

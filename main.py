@@ -1,6 +1,5 @@
-from base.optimizer import Optimizer
-from base.solver import Solver
-from share.dynamic_solver import knapsack_dynamic_programming
+from solvers.dynamic_solver import DynamicSolver
+from solvers.genetic_solver import GeneticSolver
 from share.read_input import read_input
 
 if __name__ == '__main__':
@@ -13,27 +12,25 @@ if __name__ == '__main__':
     # optimizer = Optimizer(items=items, capacity=capacity)
     # optimizer.optimize()
 
-    solver = Solver(items=items,
-                    capacity=capacity,
-                    population_size=500,
-                    max_iterations=1000,
-                    max_stagnating_iterations=50)
+    genetic_solver = GeneticSolver(items=items,
+                                   capacity=capacity,
+                                   population_size=500,
+                                   max_iterations=1000,
+                                   max_stagnating_iterations=50)
 
-    solve = solver.solve()
-    genome = solve.get_genome()
-    selected_items_ga = []
+    selected_items_ga, price_ga = genetic_solver.solve()
 
-    for i in range(len(genome)):
-        if genome[i] == 1:
-            selected_items_ga.append((items[i].get_price(), items[i].get_weight()))
+    dynamic_solver = DynamicSolver(items=items,
+                                   capacity=capacity)
+
+    selected_items_da, price_da = dynamic_solver.solve()
 
     print(f'\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Solve GA ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n'
-          f'fitness: {solve.fitness()} \n'
+          f'fitness: {price_ga} \n'
           f'selected_items: {selected_items_ga} \n'
           f'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
-    selected_items, total_price = knapsack_dynamic_programming(items, capacity)
     print(f'\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Solve DP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n'
-          f'fitness: {total_price} \n'
-          f'selected items: {selected_items} \n'
+          f'fitness: {price_da} \n'
+          f'selected items: {selected_items_da} \n'
           f'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
